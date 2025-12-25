@@ -1,0 +1,33 @@
+.Card {
+  /* 1. 使用更丰富的渐变色（加入中间色，增加通透感） */
+  background: linear-gradient(
+    135deg,
+    #605ed7 0%,
+    #ddb070 20%,
+    #4cb079 40%,
+    #b792e4 60%,
+    #97ceaf 80%,
+    #ebdbac 100%
+  );
+
+  border-radius: 24px;
+  padding: 24px;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+
+  /* 2. 关键：边框不是纯白，是带有透明度的亮紫色，模拟边缘高光 */
+  border: 1px solid rgba(196, 181, 253, 0.3);
+
+  /* 3. 复合阴影：外层黑影 + 靠近卡片的紫色弥散影（外发光效果） */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(124, 58, 237, 0.2);
+
+  /* 4. 添加内发光 (Inset Shadow) */
+  box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05),
+    0 10px 30px rgba(0, 0, 0, 0.3);
+
+  .ant-card-body {
+    height: 100%;
+  }
+  
+}
