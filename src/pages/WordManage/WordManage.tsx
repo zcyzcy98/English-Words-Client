@@ -59,6 +59,7 @@ function WordManage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingWord, setEditingWord] = useState<Word | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   useEffect(() => {
     fetchWords();
@@ -120,6 +121,7 @@ function WordManage() {
     setModalOpen(true);
   };
 
+  // 删除单词
   const handleDelete = async (id: string) => {
     try {
       await api.deleteWord(id);
@@ -127,6 +129,17 @@ function WordManage() {
       fetchWords();
     } catch {
       message.error("删除失败");
+    }
+  };
+
+  // 批量删除单词
+  const batchDeleteWords = async () => {
+    try {
+      await api.batchDeleteWord(selectedRows);
+      message.success("批量删除成功");
+      fetchWords();
+    } catch {
+      message.error("批量删除失败");
     }
   };
 
@@ -260,18 +273,34 @@ function WordManage() {
               共 {words.length} 个单词
             </p>
           </div>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setModalOpen(true)}
-          >
-            添加单词
-          </Button>
+          <div>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setModalOpen(true)}
+            >
+              添加单词
+            </Button>
+            <Button
+              className="ml-2"
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => batchDeleteWords()}
+            >
+              批量删除单词
+            </Button>
+          </div>
         </div>
 
         {/* 表格 */}
         <div className="bg-white rounded-xl shadow-sm">
           <Table
+            rowSelection={{
+              type: "checkbox",
+              onChange: (selectedRowKeys) => {
+                setSelectedRows(selectedRowKeys as string[]);
+              },
+            }}
             columns={columns}
             dataSource={words}
             rowKey="id"

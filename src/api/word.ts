@@ -29,6 +29,10 @@ const wordApi = {
   // 删除单词
   deleteWord: (id: string) => request.delete(`/words/deleteWord/${id}`),
 
+  // 批量删除单词
+  batchDeleteWord: (ids: string[]) =>
+    request.delete(`/words/batchDeleteWord`, { data: { ids } }),
+
   // 获取今日复习单词
   getReviewWords: () => request.get("/words/review"),
 
