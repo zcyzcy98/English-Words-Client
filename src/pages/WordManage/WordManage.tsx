@@ -134,6 +134,10 @@ function WordManage() {
 
   // 批量删除单词
   const batchDeleteWords = async () => {
+    if (selectedRows.length === 0) {
+      message.warning("请选择要删除的单词");
+      return;
+    }
     try {
       await api.batchDeleteWord(selectedRows);
       message.success("批量删除成功");
