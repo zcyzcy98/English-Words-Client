@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Input, List, Spin, Avatar } from "antd";
 import { UserOutlined, RobotOutlined } from "@ant-design/icons";
 import ChatMessage from "../markdown";
+import api from "@/api";
 
 interface Message {
   id: string;
@@ -40,39 +41,42 @@ const AIComponent = () => {
     setInput("");
 
     try {
-      const res = await fetch("http://localhost:3001/api/ai/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: input }),
+      const res = await api.chat({
+        prompt: input,
+        sessionId: 'zcy',
       });
 
-      if (!res.body) return;
+      console.log(res);
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let currentText = ""; // 用来记录累积的内容
+      // if (!res.body) return;
 
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
+      // const reader = res.body.getReader();
+      // const decoder = new TextDecoder();
+      // let currentText = ""; // 用来记录累积的内容
 
-        const chunk = decoder.decode(value);
-        currentText += chunk;
+      // while (true) {
+      //   const { value, done } = await reader.read();
+      //   if (done) break;
 
-        // 2. 这里的更新逻辑非常精准：只根据 ID 更新那条 AI 消息
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === aiResponseId
-              ? { ...msg, text: currentText, status: "streaming" }
-              : msg,
-          ),
-        );
-      }
+      //   const chunk = decoder.decode(value);
+      //   currentText += chunk;
 
-      // 3. 结束后标记为 done
+      //   // 2. 这里的更新逻辑非常精准：只根据 ID 更新那条 AI 消息
+      //   setMessages((prev) =>
+      //     prev.map((msg) =>
+      //       msg.id === aiResponseId
+      //         ? { ...msg, text: currentText, status: "streaming" }
+      //         : msg,
+      //     ),
+      //   );
+      // }
+
+      // // 3. 结束后标记为 done
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === aiResponseId ? { ...msg, status: "done" } : msg,
+          msg.id === aiResponseId
+            ? { ...msg, text: res.data.data, status: "done" }
+            : msg,
         ),
       );
     } catch (error) {

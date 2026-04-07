@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
-import { Form, Input, Button, Select, Card, message, Space, Tag } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Card,
+  message,
+  Space,
+  Tag,
+  Flex,
+} from "antd";
 import {
   PlusOutlined,
   SoundOutlined,
@@ -7,6 +17,7 @@ import {
   EditOutlined,
   TagsOutlined,
   FileTextOutlined,
+  RobotOutlined,
 } from "@ant-design/icons";
 import api from "@/api";
 
@@ -37,6 +48,7 @@ const categories = ["日常", "商务", "学术", "托福", "雅思", "四级", 
 function AddWord() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [todayAddWordCount, setTodayAddWordCount] = useState(0);
 
@@ -88,6 +100,32 @@ function AddWord() {
       setSelectedCategory(selectedCategory.filter((t) => t !== tag));
     } else {
       setSelectedCategory([...selectedCategory, tag]);
+    }
+  };
+
+  const handleAIGenerate = async () => {
+    const word = form.getFieldValue("word");
+    const meaning = form.getFieldValue("meaning");
+
+    if (!word) {
+      message.warning("请先输入英文单词");
+      return;
+    }
+
+    setAiGenerating(true);
+    try {
+      const prompt = `请为英文单词 "${word}" (中文释义: ${meaning || "未提供"}) 生成一个地道的英文例句。直接返回例句即可，不要有其他解释。`;
+      const res = await api.chat({ prompt, sessionId: "word-generation" });
+      if (res) {
+        const { data } = res;
+        form.setFieldsValue({ example: data.data });
+        message.success("例句生成成功");
+      }
+    } catch (error) {
+      console.error("AI Generate Error:", error);
+      message.error("例句生成失败，请重试");
+    } finally {
+      setAiGenerating(false);
     }
   };
 
@@ -222,10 +260,26 @@ function AddWord() {
           <Form.Item
             name="example"
             label={
-              <span className="text-gray-600 font-medium flex items-center gap-1.5">
-                <FileTextOutlined className="text-cyan-500" />
-                例句（可选）
-              </span>
+              <Flex
+                align="center"
+                justify="space-between"
+                style={{ width: "100%" }}
+              >
+                <span className="text-gray-600 font-medium flex items-center gap-1.5">
+                  <FileTextOutlined className="text-cyan-500" />
+                  例句（可选）
+                </span>
+                <Button
+                  type="primary"
+                  size="small"
+                  icon={<RobotOutlined />}
+                  loading={aiGenerating}
+                  onClick={handleAIGenerate}
+                  className="rounded-lg bg-linear-to-r from-blue-400 to-indigo-500 border-0 shadow-sm hover:shadow-md"
+                >
+                  AI 生成
+                </Button>
+              </Flex>
             }
           >
             <TextArea
