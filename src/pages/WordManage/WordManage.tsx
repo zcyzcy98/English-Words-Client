@@ -277,7 +277,7 @@ function WordManage() {
               共 {words.length} 个单词
             </p>
           </div>
-          <div>
+          <div className="w-[250px] flex justify-between">
             <Button
               type="primary"
               icon={<PlusOutlined />}
@@ -288,7 +288,6 @@ function WordManage() {
             <Button
               className="ml-2"
               type="primary"
-              icon={<PlusOutlined />}
               onClick={() => batchDeleteWords()}
             >
               批量删除单词
