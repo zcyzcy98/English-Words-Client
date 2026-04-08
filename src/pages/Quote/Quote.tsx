@@ -397,6 +397,7 @@ function AddQuote() {
                   <Button
                     type="primary"
                     icon={<RobotOutlined />}
+                    loading={aiGenerating}
                     onClick={() => handleAIGenerate()}
                   >
                     AI生成名言
