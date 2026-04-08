@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const request = axios.create({
-  baseURL: "http://localhost:3001/api",
+  baseURL: "https://english-words-server.onrender.com/api",
   timeout: 100000,
 });
 
