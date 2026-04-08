@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Input, List, Spin, Avatar } from "antd";
 import { UserOutlined, RobotOutlined } from "@ant-design/icons";
 import ChatMessage from "./Markdown";
@@ -43,7 +43,7 @@ const AIComponent = () => {
     try {
       const res = await api.chat({
         prompt: input,
-        sessionId: 'zcy',
+        sessionId: "zcy",
       });
 
       console.log(res);
