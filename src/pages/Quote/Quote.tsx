@@ -17,6 +17,7 @@ import {
   FileTextOutlined,
   PictureOutlined,
   TranslationOutlined,
+  RobotOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import api from "@/api";
@@ -45,6 +46,8 @@ function AddQuote() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingQuote, setEditingQuote] = useState<Quote | null>(null);
 
+  const [aiGenerating, setAiGenerating] = useState(false);
+
   useEffect(() => {
     fetchQuotes();
   }, []);
@@ -58,6 +61,33 @@ function AddQuote() {
       message.error("获取名言列表失败");
     } finally {
       setTableLoading(false);
+    }
+  };
+
+  const handleAIGenerate = async () => {
+    setAiGenerating(true);
+    try {
+      const prompt = `请帮我搜集1句关于英文名言，尽量挑选那些能够引发共鸣、具有深刻洞见的句子。
+      输出要求：使用JSON对象形式。必须包含三个字段：英文原句content、中文翻译translation、作者author。
+      直接返回JSON对象，不要包含任何解释或说明。`;
+      const res = await api.chat({ prompt, sessionId: "quote" });
+      if (res) {
+        const { data } = res;
+        const cleanJson = data.data.replace(/```json|```/g, "").trim();
+        const finalData = JSON.parse(cleanJson);
+        console.log(finalData);
+        message.success("名言生成成功");
+        form.setFieldsValue({
+          content: finalData.content,
+          translation: finalData.translation,
+          author: finalData.author,
+        });
+      }
+    } catch (error) {
+      console.error("AI Generate Error:", error);
+      message.error("生成失败，请重试");
+    } finally {
+      setAiGenerating(false);
     }
   };
 
@@ -363,6 +393,15 @@ function AddQuote() {
                 <Button type="primary" htmlType="submit" loading={loading}>
                   {editingQuote ? "保存" : "添加"}
                 </Button>
+                {!editingQuote ? (
+                  <Button
+                    type="primary"
+                    icon={<RobotOutlined />}
+                    onClick={() => handleAIGenerate()}
+                  >
+                    AI生成名言
+                  </Button>
+                ) : null}
               </div>
             </Form.Item>
           </Form>
