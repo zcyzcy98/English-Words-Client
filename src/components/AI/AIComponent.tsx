@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Input, List, Spin, Avatar } from "antd";
 import { UserOutlined, RobotOutlined } from "@ant-design/icons";
-import ChatMessage from "../markdown";
+import ChatMessage from "./Markdown";
 import api from "@/api";
 
 interface Message {
