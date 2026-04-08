@@ -12,6 +12,11 @@ export default defineConfig({
     },
   },
   server: {
-    host: "0.0.0.0",
+    allowedHosts: true,
+  },
+  preview: {
+    allowedHosts: true,
+    port: 4173, // 确保端口固定
+    host: true, // 监听所有地址，包括公网地址
   },
 });
