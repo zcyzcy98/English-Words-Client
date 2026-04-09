@@ -13,6 +13,13 @@ export default defineConfig({
   },
   server: {
     allowedHosts: true,
+    proxy: {
+      // 匹配所有以 /api 开头的请求
+      "/api": {
+        target: "http://localhost:3001", // 你的后端接口地址
+        changeOrigin: true, // 允许跨域
+      },
+    },
   },
   preview: {
     allowedHosts: true,
