@@ -67,20 +67,17 @@ function AddQuote() {
   const handleAIGenerate = async () => {
     setAiGenerating(true);
     try {
-      const prompt = `请帮我搜集1句关于英文名言，尽量挑选那些能够引发共鸣、具有深刻洞见的句子。
-      输出要求：使用JSON对象形式。必须包含三个字段：英文原句content、中文翻译translation、作者author。
-      直接返回JSON对象，不要包含任何解释或说明。`;
-      const res = await api.chat({ prompt, sessionId: "quote" });
+      const res = await api.generateQuote();
+      console.log(res);
+
       if (res) {
         const { data } = res;
-        const cleanJson = data.data.replace(/```json|```/g, "").trim();
-        const finalData = JSON.parse(cleanJson);
-        console.log(finalData);
+        console.log(data, "------");
         message.success("名言生成成功");
         form.setFieldsValue({
-          content: finalData.content,
-          translation: finalData.translation,
-          author: finalData.author,
+          content: data.content,
+          translation: data.translation,
+          author: data.author,
         });
       }
     } catch (error) {

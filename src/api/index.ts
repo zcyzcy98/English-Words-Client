@@ -1,14 +1,14 @@
 import wordApi from "./word";
 import quoteApi from "./quote";
 import checkinApi from "./checkin";
-import ai from './ai'
+import aiApi from './ai' 
 
 // 兼容旧的默认导出方式
 const api = {
   ...wordApi,
   ...quoteApi,
   ...checkinApi,
-  ...ai
+  ...aiApi,
 };
 
 export default api;

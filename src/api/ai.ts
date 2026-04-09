@@ -1,8 +1,11 @@
 import request from "./request";
 
-const checkinApi = {
-  // 获取签到状态
+const aiApi = {
+  // 聊天
   chat: (data: { prompt: string; sessionId: string }) => request.post("/ai/chat", data),
+  // 生成名言
+  generateQuote: () => request.get("/ai/generate/quote"),
 };
 
-export default checkinApi;
+export default aiApi 
+;
