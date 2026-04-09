@@ -114,11 +114,10 @@ function AddWord() {
 
     setAiGenerating(true);
     try {
-      const prompt = `请为英文单词 "${word}" (中文释义: ${meaning || "未提供"}) 生成一个地道的英文例句。直接返回例句即可，不要有其他解释。`;
-      const res = await api.chat({ prompt, sessionId: "word-generation" });
-      if (res) {
+      const res = await api.generateExample({ word, meaning });
+      if (res.status === 200) {
         const { data } = res;
-        form.setFieldsValue({ example: data.data });
+        form.setFieldsValue({ example: data.example });
         message.success("例句生成成功");
       }
     } catch (error) {
